@@ -1,5 +1,6 @@
 package com.example.sparkyevangelista.todoapp;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.View;
@@ -12,12 +13,21 @@ import java.nio.charset.Charset;
 import java.util.*;
 import java.io.File;
 
+import javax.xml.transform.Result;
+
 /**
  * Find out what other apis I can use to make the todo app easier, better
  * Find out about some java css to style components
  */
 
 public class TODO extends AppCompatActivity {
+
+    // a numeric code used to identify the edit activity uniquely
+    public final static int EDIT_REQUEST_CODE = 20;
+
+    //keys used for passing data between activities
+    public final static String ITEM_TEXT = "itemText";
+    public final static String ITEM_POSITION = "itemPosition";
 
     ArrayList<String> items; //going to house the data the user has entered
     ArrayAdapter<String> itemsAdapter; //transfers the data from the array to the list view
@@ -61,11 +71,48 @@ public class TODO extends AppCompatActivity {
                 return true;
             }
         });
+
+        //set up the listener for the edit regular click
+        listItems.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                //creating the instance of the new activity
+                Intent i = new Intent(TODO.this, EdititemActivity.class);
+
+                //pass the data being edited
+                i.putExtra(ITEM_TEXT, items.get(position));
+                i.putExtra(ITEM_POSITION, position);
+
+                //display the new activity
+                startActivityForResult(i, EDIT_REQUEST_CODE);
+            }
+
+        });
+
     }
 
+    //handle results from edit activity
+    protected void onActivityResult(int requestCode, int resultCode, Intent data){
+        super.onActivityResult(resultCode, resultCode, data);
+        //check the result is okay and the one we think it is
+        if(resultCode == RESULT_OK && requestCode == EDIT_REQUEST_CODE){
+            //extract the updated item text from Intent extras
+            String updatedItem = data.getExtras().getString(ITEM_TEXT);
+            //getting the position
+            int position = data.getExtras().getInt(ITEM_POSITION);
+            //update the modal with the new item text and the new position
+            items.set(position, updatedItem);
+            //notify the adapter
+            itemsAdapter.notifyDataSetChanged();
+            //save it in the files / overwrite the files
+            writeItems();
+            //notify the user that the edited text was saved
+            Toast.makeText(this, "Item was updated successfully", Toast.LENGTH_SHORT).show();
+        }
+    }
 
     /**
-     * read and write items method is used to add persistance to the application and
+     * getDataFiles, read and write items method are used to add persistence to the application and
      * save the data input by the user
      */
 
