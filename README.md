@@ -33,7 +33,7 @@ GIF created with [LiceCap](http://www.cockos.com/licecap/).
 
 ## Notes
 
-challenges encountered...
+I encountered some challenges like learning how to use Andriod Studio for the first time. It wasn't so much of a challenge but it was somewhat difficult for me. Another challenge I faced was time management, doing this a week before finals was not an easy thing to do when the stress of finals hangs over you. I also had the challenge to swtich the "listview" container to a "recyleview" container in order to re-order the items in the list around. The things I had to learn in order to do this was making a item touch helper callback using interfaces that allows you to listen for “move” and “swipe” events. It’s also where you are able to control the state of the view selected, and override the default animations. Overall the challenges I faced where great and helped me think differently when building mobile apps as I develope mobile apps in React Native.
 
 ## License
 
